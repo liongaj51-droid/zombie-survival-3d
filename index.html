@@ -41,7 +41,77 @@ canvas{display:block;width:100%;height:100%}
 #weapon{position:fixed;right:22px;bottom:75px;z-index:32;padding:6px 10px;border-radius:9px;background:rgba(6,10,16,.42);color:#e5edf5;font-size:10px;letter-spacing:2px}
 #start,#pause{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;background:radial-gradient(circle at 50% 38%,rgba(41,81,106,.31),rgba(2,5,9,.97) 68%)}
 #pause{display:none;z-index:110}
-.card{width:min(720px,92vw);padding:34px 24px;border-radius:20px;border:1px solid var(--line);background:var(--glass);box-shadow:0 28px 100px rgba(0,0,0,.62);backdrop-filter:blur(10px)}
+
+#menuBackdrop{position:absolute;inset:0;overflow:hidden;background:#050a11;z-index:-2}
+#menuBackdrop:before{content:"";position:absolute;inset:0;background:
+  radial-gradient(circle at 50% 29%,rgba(120,177,221,.17),transparent 27%),
+  radial-gradient(circle at 50% 60%,rgba(78,124,156,.10),transparent 44%),
+  linear-gradient(180deg,#030812 0%,#07111d 48%,#02060a 100%)}
+.menuSky{position:absolute;inset:0;background:
+  linear-gradient(180deg,transparent 0 49%,rgba(4,9,14,.28) 50%),
+  repeating-linear-gradient(90deg,rgba(255,255,255,.014) 0 1px,transparent 1px 90px);
+  opacity:.45}
+.menuMoon{position:absolute;left:50%;top:12%;width:150px;height:150px;transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(circle at 38% 35%,#f4fbff 0,#dbe7f4 28%,#9fb4c7 58%,rgba(132,151,168,.18) 70%,transparent 71%);
+  box-shadow:0 0 45px rgba(198,224,255,.18),0 0 120px rgba(113,169,222,.12);filter:blur(.15px)}
+.menuStars{position:absolute;inset:0;background-image:
+  radial-gradient(circle at 8% 14%,rgba(255,255,255,.7) 0 1px,transparent 1.5px),
+  radial-gradient(circle at 17% 22%,rgba(220,235,255,.6) 0 1px,transparent 1.5px),
+  radial-gradient(circle at 28% 9%,rgba(255,255,255,.52) 0 1px,transparent 1.5px),
+  radial-gradient(circle at 41% 19%,rgba(205,229,255,.55) 0 1px,transparent 1.5px),
+  radial-gradient(circle at 61% 12%,rgba(255,255,255,.7) 0 1px,transparent 1.5px),
+  radial-gradient(circle at 75% 18%,rgba(255,255,255,.45) 0 1px,transparent 1.5px),
+  radial-gradient(circle at 88% 11%,rgba(220,235,255,.6) 0 1px,transparent 1.5px),
+  radial-gradient(circle at 93% 27%,rgba(255,255,255,.55) 0 1px,transparent 1.5px);
+  animation:menuTwinkle 4s ease-in-out infinite alternate;opacity:.7}
+@keyframes menuTwinkle{from{opacity:.45}to{opacity:.85}}
+.menuGlow{position:absolute;left:50%;top:50%;width:72%;height:42%;transform:translate(-50%,-50%);
+  background:radial-gradient(ellipse,rgba(79,162,215,.10),transparent 68%);filter:blur(22px)}
+.menuCity{position:absolute;bottom:19%;height:36%;width:48%;
+  background:
+    linear-gradient(90deg,transparent 0 3%,#111c27 3% 13%,transparent 13% 16%,#0c1722 16% 28%,transparent 28% 31%,#13202b 31% 43%,transparent 43% 46%,#0b1620 46% 62%,transparent 62% 66%,#101d28 66% 79%,transparent 79% 82%,#0b1621 82% 100%);
+  clip-path:polygon(0 100%,0 36%,7% 36%,7% 27%,14% 27%,14% 43%,22% 43%,22% 20%,31% 20%,31% 37%,39% 37%,39% 7%,48% 7%,48% 31%,58% 31%,58% 15%,65% 15%,65% 41%,74% 41%,74% 25%,82% 25%,82% 4%,89% 4%,89% 33%,100% 33%,100% 100%);
+  opacity:.92;filter:drop-shadow(0 -5px 18px rgba(52,132,179,.08))}
+.cityA{left:-2%}.cityB{right:-2%;transform:scaleX(-1);opacity:.78}
+.menuCity:after{content:"";position:absolute;inset:12% 3% 5%;
+  background:
+    repeating-linear-gradient(90deg,transparent 0 14px,rgba(255,209,119,.72) 14px 16px,transparent 16px 30px),
+    repeating-linear-gradient(0deg,transparent 0 16px,rgba(121,189,255,.34) 16px 18px,transparent 18px 30px);
+  opacity:.27;mix-blend-mode:screen}
+.menuStreet{position:absolute;left:50%;bottom:-2%;width:125%;height:34%;transform:translateX(-50%);
+  background:linear-gradient(180deg,rgba(9,14,19,0) 0%,rgba(3,7,11,.25) 34%,rgba(2,5,8,.95) 100%);
+  clip-path:polygon(41% 0,59% 0,100% 100%,0 100%)}
+.menuStreet:before{content:"";position:absolute;left:50%;top:6%;width:4px;height:90%;
+  transform:translateX(-50%) rotate(.4deg);
+  background:linear-gradient(180deg,rgba(255,223,160,.0),rgba(255,223,160,.65),rgba(255,223,160,.04));
+  box-shadow:0 0 18px rgba(255,210,132,.25)}
+.menuStreet:after{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,transparent 0 22px,rgba(112,181,235,.055) 22px 24px,transparent 24px 80px);
+  opacity:.5}
+.menuFog{position:absolute;left:-10%;width:120%;height:18%;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(177,205,222,.13),rgba(177,205,222,.04) 48%,transparent 72%);
+  filter:blur(12px);animation:fogDrift 16s linear infinite}
+.fogA{bottom:24%;transform:translateX(-6%)}.fogB{bottom:16%;transform:translateX(8%);animation-duration:22s;opacity:.7}
+@keyframes fogDrift{0%{margin-left:-7%}50%{margin-left:7%}100%{margin-left:-7%}}
+.menuRain{position:absolute;inset:0;opacity:.18;background:
+  repeating-linear-gradient(112deg,transparent 0 28px,rgba(164,205,235,.7) 28px 29px,transparent 29px 62px);
+  animation:rainMove .8s linear infinite}
+@keyframes rainMove{to{background-position:0 70px}}
+.menuZombie{position:absolute;bottom:18%;width:36px;height:95px;opacity:.34;filter:blur(.35px)}
+.menuZombie:before{content:"";position:absolute;left:7px;top:0;width:22px;height:22px;border-radius:50%;background:linear-gradient(#3d5538,#263a2e);box-shadow:0 0 12px rgba(100,188,86,.12)}
+.menuZombie:after{content:"";position:absolute;left:4px;top:20px;width:28px;height:54px;border-radius:7px;background:linear-gradient(90deg,#1a2328,#36434b,#1a2328);box-shadow:-13px 26px 0 -10px #243229,13px 26px 0 -10px #243229}
+.z1{left:21%;transform:scale(1.12)}.z2{left:50%;transform:scale(.78);opacity:.25}.z3{right:17%;transform:scale(.95);opacity:.3}
+.menuTopline{position:absolute;top:11px;left:50%;transform:translateX(-50%);z-index:4;color:rgba(203,222,238,.48);font-size:9px;letter-spacing:3px;white-space:nowrap;text-shadow:0 1px 5px #000}
+.menuCorner{position:absolute;top:13px;z-index:4;color:rgba(255,255,255,.36);font-size:8px;letter-spacing:2px}
+.menuCornerLeft{left:17px}.menuCornerRight{right:17px}
+.menuBackdrop + .menuTopline{animation:uiFade 1.1s ease both}
+@keyframes uiFade{from{opacity:0;transform:translate(-50%,-6px)}to{opacity:1;transform:translate(-50%,0)}}
+.card:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.055),transparent 24%,transparent 70%,rgba(140,110,255,.05));pointer-events:none}
+.card .logo{font-size:48px;letter-spacing:4px}
+.card .sub{letter-spacing:6px}
+.card .grid{position:relative;z-index:2}
+.card .primary,.card .secondary{position:relative;z-index:2}
+.card{width:min(760px,92vw);padding:30px 24px;border-radius:22px;border:1px solid rgba(255,255,255,.13);background:linear-gradient(180deg,rgba(7,12,18,.72),rgba(7,12,18,.44));box-shadow:0 30px 100px rgba(0,0,0,.68),0 0 50px rgba(78,146,210,.06),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(8px);position:relative;overflow:hidden}
 .logo{font-size:45px;font-weight:900;letter-spacing:3px;position:relative;text-shadow:0 0 26px rgba(255,216,117,.12)}.logo span{color:var(--good)}.sub{margin-top:6px;color:#9badbe;letter-spacing:5px;font-size:10px}.vipRibbon{display:inline-flex;align-items:center;gap:7px;margin:0 auto 12px;padding:7px 11px;border-radius:999px;border:1px solid rgba(255,216,117,.35);background:linear-gradient(90deg,rgba(255,216,117,.10),rgba(156,124,255,.12));color:#ffe4a0;font-size:10px;font-weight:900;letter-spacing:2px;box-shadow:0 0 22px rgba(255,216,117,.08)}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:560px;margin:20px auto}.tile{padding:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);border-radius:10px;font-size:12px;color:#cbd4de}
 .primary{padding:15px 38px;border:1px solid rgba(255,255,255,.14);border-radius:11px;background:linear-gradient(135deg,#89ee57,#50c83f);color:#071007;font-weight:900;font-size:18px;cursor:pointer;box-shadow:0 14px 30px rgba(120,224,80,.16),inset 0 1px 0 rgba(255,255,255,.45)}
@@ -68,6 +138,19 @@ canvas{display:block;width:100%;height:100%}
 @media(max-width:900px) and (orientation:portrait){
   #hud{top:8px;left:8px}.row{font-size:12px}.bar{width:165px;height:7px}
 }
+
+@media(max-width:900px){
+  #menuMoon{display:none}
+  .menuTopline{font-size:7px;letter-spacing:2px;top:7px}
+  .menuCorner{font-size:7px;top:9px}
+  .menuZombie{opacity:.18}
+  .cityA,.cityB{bottom:20%;height:29%}
+  .menuStreet{height:30%}
+  .card{width:min(720px,94vw);background:linear-gradient(180deg,rgba(6,11,18,.77),rgba(6,11,18,.54));}
+  .card .logo{font-size:32px;letter-spacing:2px}
+  .card .sub{letter-spacing:3px}
+}
+
 @media(max-width:900px){#mobile{display:block}#hud{left:8px;top:8px;min-width:190px}.row{font-size:12px}.bar{width:165px;height:7px}#ammo{font-size:18px}#centerHint{display:none}.logo{font-size:31px}.card{padding:25px 18px}.grid{gap:6px;margin:16px auto}.tile{font-size:11px;padding:8px}#mobileHint{display:block;position:fixed;left:50%;bottom:3px;transform:translateX(-50%);z-index:58;color:rgba(255,255,255,.46);font-size:9px;pointer-events:none;white-space:nowrap}}
 
 #vipBadge{position:fixed;right:16px;top:14px;z-index:32;padding:7px 11px;border-radius:999px;border:1px solid rgba(255,216,117,.38);background:linear-gradient(90deg,rgba(20,15,6,.80),rgba(24,17,35,.78));color:#ffe09a;font-size:10px;font-weight:900;letter-spacing:2px;backdrop-filter:blur(8px);box-shadow:0 10px 24px rgba(0,0,0,.24),0 0 18px rgba(255,216,117,.06);pointer-events:none}
@@ -126,7 +209,26 @@ canvas{display:block;width:100%;height:100%}
   <div id="joyZone"><div id="joyBase"><div id="joyKnob"></div></div></div><div id="lookZone"></div>
   <button class="m" id="flash">F</button><button class="m" id="sprint">RUN</button><button class="m" id="reload">RELOAD</button><button class="m" id="swap">GUN</button><button class="m" id="fire">FIRE</button>
 </div><div id="mobileHint">JOYSTICK JALAN • GESER KANAN AIM • FIRE • RELOAD • RUN</div>
-<div id="start"><div class="card"><div class="vipRibbon">✦ VIP NIGHTFALL ACCESS • MODERN ELITE ✦</div><div class="logo vipGlow">NIGHTFALL <span>APOCALYPSE</span></div><div class="sub">ZOMBIE SURVIVAL 3D — MODERN ELITE</div>
+<div id="start">
+  <div id="menuBackdrop" aria-hidden="true">
+    <div class="menuSky"></div>
+    <div class="menuMoon"></div>
+    <div class="menuStars"></div>
+    <div class="menuGlow"></div>
+    <div class="menuCity cityA"></div>
+    <div class="menuCity cityB"></div>
+    <div class="menuStreet"></div>
+    <div class="menuFog fogA"></div>
+    <div class="menuFog fogB"></div>
+    <div class="menuRain"></div>
+    <div class="menuZombie z1"></div>
+    <div class="menuZombie z2"></div>
+    <div class="menuZombie z3"></div>
+  </div>
+  <div class="menuTopline">SECTOR 07 • NIGHTFALL CITY • SURVIVAL PROTOCOL</div>
+  <div class="menuCorner menuCornerLeft">LIVE BUILD</div>
+  <div class="menuCorner menuCornerRight">ONLINE • SOLO</div>
+  <div class="card"><div class="vipRibbon">✦ VIP NIGHTFALL ACCESS • MODERN ELITE ✦</div><div class="logo vipGlow">NIGHTFALL <span>APOCALYPSE</span></div><div class="sub">ZOMBIE SURVIVAL 3D — MODERN ELITE</div>
 <div class="grid"><div class="tile">🧟 6 tipe zombie</div><div class="tile">👑 boss wave</div><div class="tile">🔫 3 senjata</div><div class="tile">🎯 headshot</div><div class="tile">🌧️ hujan + petir</div><div class="tile">🔦 flashlight</div><div class="tile">🎁 pickup</div><div class="tile">💾 high score</div></div>
 <button class="primary" id="startBtn">MULAI GAME</button><button class="secondary" id="fullBtn">LAYAR PENUH</button><div class="small">PC: WASD + mouse + klik • HP: joystick + swipe + tombol layar</div><div class="small" style="color:#c8b7ff">VIP BUILD • Cinematic rain • Boss waves • Adaptive mobile quality</div><div class="small">Portrait maupun landscape didukung otomatis.</div><div class="small" id="bestText">HIGH SCORE: 0</div></div></div>
 <div id="pause"><div class="card"><div class="logo">GAME <span>PAUSED</span></div><div class="sub">NIGHTFALL APOCALYPSE</div><div style="margin:22px;color:#cbd4de">Tekan ESC untuk lanjut.</div><button class="primary" id="resumeBtn">LANJUT</button></div></div>
