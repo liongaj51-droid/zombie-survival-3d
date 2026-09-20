@@ -135,6 +135,155 @@ const zombies=[];
 
 function spawnZombie(){
 
+  const z = new THREE.Group();
+
+  // MATERIAL
+  const skinMat = new THREE.MeshStandardMaterial({
+    color:0x6f8f45,
+    roughness:0.9
+  });
+
+  const darkSkinMat = new THREE.MeshStandardMaterial({
+    color:0x3f5f2a,
+    roughness:1
+  });
+
+  const shirtMat = new THREE.MeshStandardMaterial({
+    color:0x4b4b55,
+    roughness:1
+  });
+
+  const pantsMat = new THREE.MeshStandardMaterial({
+    color:0x22252b,
+    roughness:1
+  });
+
+  const eyeMat = new THREE.MeshBasicMaterial({
+    color:0xff2020
+  });
+
+  const bloodMat = new THREE.MeshStandardMaterial({
+    color:0x6b1111,
+    roughness:1
+  });
+
+  // BODY
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(1.25,1.7,0.75),
+    shirtMat
+  );
+  body.position.y = 2.0;
+  z.add(body);
+
+  // HEAD
+  const head = new THREE.Mesh(
+    new THREE.BoxGeometry(1.15,1.15,1.05),
+    skinMat
+  );
+  head.position.y = 3.45;
+  z.add(head);
+
+  // EARS
+  const earGeo = new THREE.BoxGeometry(0.18,0.38,0.65);
+
+  const earL = new THREE.Mesh(earGeo,skinMat);
+  earL.position.set(-0.63,3.45,0);
+  z.add(earL);
+
+  const earR = new THREE.Mesh(earGeo,skinMat);
+  earR.position.set(0.63,3.45,0);
+  z.add(earR);
+
+  // EYES
+  const eyeGeo = new THREE.SphereGeometry(0.11,8,8);
+
+  const eyeL = new THREE.Mesh(eyeGeo,eyeMat);
+  eyeL.position.set(-0.22,3.55,0.53);
+  z.add(eyeL);
+
+  const eyeR = new THREE.Mesh(eyeGeo,eyeMat);
+  eyeR.position.set(0.22,3.55,0.53);
+  z.add(eyeR);
+
+  // MOUTH
+  const mouth = new THREE.Mesh(
+    new THREE.BoxGeometry(0.55,0.16,0.08),
+    bloodMat
+  );
+  mouth.position.set(0,3.18,0.54);
+  z.add(mouth);
+
+  // BLOOD / WOUND
+  const wound = new THREE.Mesh(
+    new THREE.SphereGeometry(0.14,8,8),
+    bloodMat
+  );
+  wound.scale.set(1,1.4,0.5);
+  wound.position.set(0.35,3.78,0.48);
+  z.add(wound);
+
+  // ARMS
+  const armGeo = new THREE.BoxGeometry(0.38,1.55,0.38);
+
+  const armL = new THREE.Mesh(armGeo,skinMat);
+  armL.position.set(-0.92,1.95,0);
+  armL.rotation.z = -0.18;
+  z.add(armL);
+
+  const armR = new THREE.Mesh(armGeo,skinMat);
+  armR.position.set(0.92,1.95,0);
+  armR.rotation.z = 0.18;
+  z.add(armR);
+
+  // HANDS
+  const handGeo = new THREE.SphereGeometry(0.22,8,8);
+
+  const handL = new THREE.Mesh(handGeo,darkSkinMat);
+  handL.position.set(-1.05,1.18,0);
+  z.add(handL);
+
+  const handR = new THREE.Mesh(handGeo,darkSkinMat);
+  handR.position.set(1.05,1.18,0);
+  z.add(handR);
+
+  // LEGS
+  const legGeo = new THREE.BoxGeometry(0.42,1.55,0.48);
+
+  const legL = new THREE.Mesh(legGeo,pantsMat);
+  legL.position.set(-0.34,0.35,0);
+  z.add(legL);
+
+  const legR = new THREE.Mesh(legGeo,pantsMat);
+  legR.position.set(0.34,0.35,0);
+  z.add(legR);
+
+  // SHOES
+  const shoeGeo = new THREE.BoxGeometry(0.5,0.25,0.8);
+
+  const shoeL = new THREE.Mesh(shoeGeo,pantsMat);
+  shoeL.position.set(-0.34,-0.45,0.15);
+  z.add(shoeL);
+
+  const shoeR = new THREE.Mesh(shoeGeo,pantsMat);
+  shoeR.position.set(0.34,-0.45,0.15);
+  z.add(shoeR);
+
+  // RANDOM SPAWN POSITION
+  const angle = Math.random() * Math.PI * 2;
+  const distance = 25 + Math.random() * 15;
+
+  z.position.set(
+    Math.cos(angle) * distance,
+    0,
+    Math.sin(angle) * distance
+  );
+
+  // ZOMBIE SPEED
+  z.userData.speed = 0.025 + Math.random() * 0.025;
+
+  scene.add(z);
+  zombies.push(z);
+}
 const z=new THREE.Group();
 
 const body=new THREE.Mesh(
