@@ -95,7 +95,7 @@ canvas{display:block;width:100%;height:100%}
 <div id="pause"><div class="card"><div class="logo">GAME <span>PAUSED</span></div><div class="sub">NIGHTFALL APOCALYPSE</div><div style="margin:22px;color:#cbd4de">Tekan ESC untuk lanjut.</div><button class="primary" id="resumeBtn">LANJUT</button></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.151.3/three.min.js"></script>
 <script>
-const scene=new THREE.Scene();scene.background=new THREE.Color(0x03070d);scene.fog=new THREE.Fog(0x03070d,32,125);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x07111a);scene.fog=new THREE.Fog(0x07111a,42,150);
 const camera=new THREE.PerspectiveCamera(74,innerWidth/innerHeight,.1,240);camera.position.set(0,1.7,8);camera.rotation.order='YXZ';scene.add(camera);
 const IS_MOBILE=window.matchMedia('(max-width:900px)').matches||('ontouchstart' in window);
 const renderer=new THREE.WebGLRenderer({antialias:!IS_MOBILE,powerPreference:'high-performance'});
@@ -104,10 +104,10 @@ renderer.setSize(innerWidth,innerHeight,false);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,MAX_DPR));
 renderer.shadowMap.enabled=!IS_MOBILE;
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;
+renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.NoToneMapping;
 renderer.info.autoReset=true;
 document.body.appendChild(renderer.domElement);
-scene.add(new THREE.HemisphereLight(0x6f8ead,0x10160f,IS_MOBILE?0.95:1.08));const moon=new THREE.DirectionalLight(0xb8ccff,IS_MOBILE?1.8:2.25);moon.position.set(20,35,10);moon.castShadow=!IS_MOBILE;moon.shadow.mapSize.width=1024;moon.shadow.mapSize.height=1024;scene.add(moon);
+const hemi=new THREE.HemisphereLight(0x9eb7d2,0x263021,IS_MOBILE?1.45:1.65);scene.add(hemi);scene.add(new THREE.AmbientLight(0x8ea7bf,IS_MOBILE?0.38:0.55));const moon=new THREE.DirectionalLight(0xc7d7ff,IS_MOBILE?2.8:3.4);moon.position.set(22,34,14);moon.castShadow=!IS_MOBILE;moon.shadow.mapSize.width=1024;moon.shadow.mapSize.height=1024;scene.add(moon);const playerFill=new THREE.PointLight(0x9fc7ff,IS_MOBILE?1.0:1.3,28,2);playerFill.position.set(0,4,4);scene.add(playerFill);
 function mat(c,r=1,m=0){return new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m})}
 function addBox(x,y,z,sx,sy,sz,c){const m=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),mat(c));m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;scene.add(m);return m}
 const ground=new THREE.Mesh(new THREE.PlaneGeometry(240,240),mat(0x4f5b4c));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
