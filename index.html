@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Zombie Survival 3D</title>
 
 <style>
@@ -16,13 +16,19 @@ html,body{
   width:100%;
   height:100%;
   overflow:hidden;
-  background:#05080d;
-  font-family:Arial,sans-serif;
+  background:#03070b;
+  font-family:Arial,Helvetica,sans-serif;
   touch-action:none;
+}
+
+body{
+  overscroll-behavior:none;
 }
 
 canvas{
   display:block;
+  width:100%;
+  height:100%;
 }
 
 #hud{
@@ -31,39 +37,37 @@ canvas{
   top:16px;
   z-index:20;
   color:#fff;
-  text-shadow:0 2px 6px #000;
+  text-shadow:0 2px 7px #000;
   pointer-events:none;
 }
 
-.title{
-  color:#aab7c7;
+.hud-title{
+  color:#a9b7c7;
   font-size:11px;
   letter-spacing:3px;
+  margin-bottom:5px;
 }
 
-.row{
-  margin-top:5px;
-  font-size:17px;
+.hud-row{
+  font-size:18px;
+  margin:4px 0;
 }
 
-.hpbox{
-  width:220px;
+#hpWrap{
+  width:230px;
   height:10px;
-  margin-top:5px;
-  background:#20252a;
-  border:1px solid #45505a;
-  border-radius:10px;
+  margin:5px 0 10px;
+  background:#14191e;
+  border:1px solid #39424b;
+  border-radius:20px;
   overflow:hidden;
 }
 
-#hpbar{
+#hpBar{
   width:100%;
   height:100%;
-  background:linear-gradient(
-    90deg,
-    #29d45c,
-    #b0f05a
-  );
+  background:linear-gradient(90deg,#26d65b,#aaf15a);
+  transition:width .12s;
 }
 
 #crosshair{
@@ -73,7 +77,7 @@ canvas{
   width:26px;
   height:26px;
   transform:translate(-50%,-50%);
-  z-index:20;
+  z-index:25;
   pointer-events:none;
 }
 
@@ -82,44 +86,41 @@ canvas{
   content:"";
   position:absolute;
   background:#fff;
-  box-shadow:0 0 4px #000;
+  box-shadow:0 0 5px #000;
 }
 
 #crosshair:before{
-  left:12px;
-  top:1px;
   width:2px;
   height:24px;
+  left:12px;
+  top:1px;
 }
 
 #crosshair:after{
-  left:1px;
-  top:12px;
   width:24px;
   height:2px;
+  left:1px;
+  top:12px;
 }
 
-#hit{
+#hitMarker{
   position:fixed;
   left:50%;
   top:50%;
   transform:translate(-50%,-50%);
-  z-index:21;
-  color:#ff4444;
-  font-size:24px;
+  z-index:26;
+  color:#ff4545;
+  font-size:28px;
+  font-weight:bold;
   opacity:0;
   pointer-events:none;
 }
 
-#damage{
+#damageFlash{
   position:fixed;
   inset:0;
-  z-index:19;
-  background:radial-gradient(
-    circle,
-    transparent 40%,
-    rgba(255,0,0,.55)
-  );
+  z-index:22;
+  background:radial-gradient(circle,transparent 38%,rgba(255,0,0,.55));
   opacity:0;
   pointer-events:none;
 }
@@ -128,39 +129,35 @@ canvas{
   position:fixed;
   inset:0;
   z-index:10;
+  background:radial-gradient(circle,transparent 44%,rgba(0,0,0,.42));
   pointer-events:none;
-  background:radial-gradient(
-    circle,
-    transparent 45%,
-    rgba(0,0,0,.42)
-  );
 }
 
-#start{
+/* =========================
+   START SCREEN
+========================= */
+
+#startScreen{
   position:fixed;
   inset:0;
   z-index:100;
   display:flex;
   align-items:center;
   justify-content:center;
-  background:
-    radial-gradient(
-      circle at center,
-      rgba(36,72,90,.28),
-      rgba(2,5,9,.97)
-    );
-  color:#fff;
   text-align:center;
+  color:#fff;
+  background:
+    radial-gradient(circle at 50% 38%,rgba(44,83,105,.32),rgba(2,5,9,.97) 68%);
 }
 
-.card{
-  width:min(620px,90vw);
+.startCard{
+  width:min(640px,92vw);
   padding:40px 28px;
+  border:1px solid rgba(255,255,255,.11);
   border-radius:18px;
-  background:rgba(8,13,19,.86);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:
-    0 25px 80px rgba(0,0,0,.6);
+  background:rgba(7,12,18,.84);
+  box-shadow:0 25px 80px rgba(0,0,0,.58);
+  backdrop-filter:blur(10px);
 }
 
 .logo{
@@ -170,164 +167,176 @@ canvas{
 }
 
 .logo span{
-  color:#8bea58;
+  color:#87ea58;
 }
 
-.sub{
-  margin-top:10px;
-  color:#9aa9b9;
+.subtitle{
+  margin-top:7px;
+  color:#99a8b8;
   letter-spacing:4px;
-  font-size:12px;
+  font-size:11px;
 }
 
-.info{
-  margin:25px auto;
-  color:#c8d2dd;
-  line-height:1.8;
+.startInfo{
+  margin:24px auto;
+  color:#cbd4df;
+  line-height:1.75;
+  font-size:14px;
 }
 
-#startBtn,
-#restartBtn{
+#startButton,
+#restartButton{
   border:0;
+  padding:15px 38px;
   border-radius:11px;
-  padding:15px 35px;
-  background:linear-gradient(
-    135deg,
-    #7ee94e,
-    #48c53c
-  );
-  color:#081008;
+  background:linear-gradient(135deg,#7dea4d,#4dc63f);
+  color:#071007;
   font-size:18px;
   font-weight:900;
   cursor:pointer;
 }
 
-#lookZone{
-  display:none;
-  position:fixed;
-  right:0;
-  top:0;
-  width:60%;
-  height:100%;
-  z-index:14;
-  touch-action:none;
+.smallText{
+  margin-top:16px;
+  color:#657585;
+  font-size:12px;
 }
 
-#mobile{
+/* =========================
+   MOBILE
+========================= */
+
+#mobileControls{
   display:none;
   position:fixed;
   inset:0;
-  z-index:30;
+  z-index:40;
   pointer-events:none;
 }
 
-#dpad{
+#joystickZone{
   position:absolute;
-  left:14px;
-  bottom:18px;
-  width:165px;
-  height:165px;
-  pointer-events:none;
-}
-
-.mbtn{
-  position:absolute;
-  width:55px;
-  height:55px;
-  border:1px solid rgba(255,255,255,.25);
-  border-radius:15px;
-  background:rgba(15,20,26,.70);
-  color:#fff;
-  font-size:22px;
-  font-weight:bold;
+  left:0;
+  bottom:0;
+  width:52%;
+  height:48%;
   pointer-events:auto;
   touch-action:none;
 }
 
-.mbtn.up{
-  left:55px;
+#joystickBase{
+  position:absolute;
+  width:126px;
+  height:126px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,.18);
+  background:rgba(11,17,23,.46);
+  left:24px;
+  bottom:26px;
+  pointer-events:none;
+}
+
+#joystickKnob{
+  position:absolute;
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,.35);
+  background:rgba(126,155,180,.36);
+  left:31px;
+  top:31px;
+}
+
+#lookZone{
+  position:absolute;
+  right:0;
   top:0;
+  width:56%;
+  height:100%;
+  pointer-events:auto;
+  touch-action:none;
 }
 
-.mbtn.left{
-  left:0;
-  top:55px;
-}
-
-.mbtn.down{
-  left:55px;
-  top:110px;
-}
-
-.mbtn.right{
-  left:110px;
-  top:55px;
-}
-
-#fire{
+#fireButton{
   position:absolute;
   right:20px;
-  bottom:28px;
+  bottom:32px;
   width:92px;
   height:92px;
-  border:2px solid rgba(255,255,255,.35);
   border-radius:50%;
-  background:rgba(190,35,35,.78);
+  border:2px solid rgba(255,255,255,.35);
+  background:rgba(190,35,35,.80);
   color:#fff;
   font-size:17px;
   font-weight:900;
   pointer-events:auto;
   touch-action:none;
+  user-select:none;
+  box-shadow:0 8px 28px rgba(0,0,0,.4);
 }
 
-#fire:active{
+#fireButton.active{
   transform:scale(.93);
+  background:rgba(235,45,45,.93);
+}
+
+#mobileHint{
+  display:none;
 }
 
 @media (max-width:900px){
 
-  #hud{
-    left:9px;
-    top:9px;
+  #mobileControls{
+    display:block;
   }
 
-  .row{
+  #hud{
+    left:10px;
+    top:10px;
+  }
+
+  .hud-title{
+    font-size:9px;
+  }
+
+  .hud-row{
     font-size:13px;
   }
 
-  .hpbox{
+  #hpWrap{
     width:170px;
     height:8px;
   }
 
-  #lookZone{
-    display:block;
-  }
-
-  #mobile{
-    display:block;
-  }
-
-  #crosshair{
-    width:22px;
-    height:22px;
-  }
-
-  .card{
-    padding:28px 18px;
-  }
-
   .logo{
-    font-size:31px;
+    font-size:32px;
   }
 
-  .sub{
-    font-size:9px;
+  .startCard{
+    padding:28px 20px;
   }
 
-  .info{
-    font-size:13px;
+  .startInfo{
+    font-size:12px;
     margin:18px auto;
+  }
+
+  #startButton,
+  #restartButton{
+    font-size:16px;
+    padding:14px 30px;
+  }
+
+  #mobileHint{
+    display:block;
+    position:fixed;
+    bottom:8px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:39;
+    color:rgba(255,255,255,.5);
+    font-size:10px;
+    pointer-events:none;
   }
 }
 </style>
@@ -336,77 +345,78 @@ canvas{
 <body>
 
 <div id="hud">
-  <div class="title">SURVIVAL STATUS</div>
+  <div class="hud-title">SURVIVAL STATUS</div>
 
-  <div class="row">
+  <div class="hud-row">
     ❤️ HP: <span id="hpText">100</span>
   </div>
 
-  <div class="hpbox">
-    <div id="hpbar"></div>
+  <div id="hpWrap">
+    <div id="hpBar"></div>
   </div>
 
-  <div class="row">
+  <div class="hud-row">
     🎯 SCORE: <span id="scoreText">0</span>
   </div>
 
-  <div class="row">
+  <div class="hud-row">
     🌊 WAVE: <span id="waveText">1</span>
   </div>
 
-  <div class="row">
+  <div class="hud-row">
     🧟 ZOMBIES: <span id="zombieText">0</span>
   </div>
 </div>
 
 <div id="crosshair"></div>
-<div id="hit">✦</div>
-<div id="damage"></div>
+<div id="hitMarker">✦</div>
+<div id="damageFlash"></div>
 <div id="vignette"></div>
 
-<!-- AREA AIM HP -->
-<div id="lookZone"></div>
+<div id="mobileControls">
 
-<!-- KONTROL HP -->
-<div id="mobile">
-
-  <div id="dpad">
-
-    <button class="mbtn up" data-key="KeyW">▲</button>
-    <button class="mbtn left" data-key="KeyA">◀</button>
-    <button class="mbtn down" data-key="KeyS">▼</button>
-    <button class="mbtn right" data-key="KeyD">▶</button>
-
+  <div id="joystickZone">
+    <div id="joystickBase">
+      <div id="joystickKnob"></div>
+    </div>
   </div>
 
-  <button id="fire">FIRE</button>
+  <div id="lookZone"></div>
+
+  <button id="fireButton">FIRE</button>
 
 </div>
 
-<div id="start">
+<div id="mobileHint">
+  JOYSTICK = JALAN • GESER KANAN = AIM • FIRE = TEMBAK
+</div>
 
-  <div class="card">
+<div id="startScreen">
+  <div class="startCard">
 
     <div class="logo">
       ZOMBIE <span>SURVIVAL</span>
     </div>
 
-    <div class="sub">
+    <div class="subtitle">
       NIGHTFALL PROTOCOL
     </div>
 
-    <div class="info">
-      PC: WASD + Mouse + Klik Kiri<br>
-      HP: D-pad + Swipe kanan + FIRE<br>
+    <div class="startInfo">
+      PC: WASD + Mouse + Klik kiri<br>
+      HP: Joystick kiri + Swipe kanan + FIRE<br>
       Bertahan selama mungkin.
     </div>
 
-    <button id="startBtn">
+    <button id="startButton">
       MULAI GAME
     </button>
 
-  </div>
+    <div class="smallText">
+      Suara otomatis aktif setelah game dimulai.
+    </div>
 
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.151.3/three.min.js"></script>
@@ -417,18 +427,15 @@ canvas{
    SCENE
 ========================================================= */
 
-const scene =
-  new THREE.Scene();
+const scene = new THREE.Scene();
 
-scene.background =
-  new THREE.Color(0x060b12);
+scene.background = new THREE.Color(0x060b12);
 
-scene.fog =
-  new THREE.Fog(
-    0x060b12,
-    30,
-    115
-  );
+scene.fog = new THREE.Fog(
+  0x060b12,
+  30,
+  120
+);
 
 
 /* =========================================================
@@ -449,8 +456,7 @@ camera.position.set(
   8
 );
 
-camera.rotation.order =
-  "YXZ";
+camera.rotation.order = "YXZ";
 
 scene.add(camera);
 
@@ -470,15 +476,10 @@ renderer.setSize(
 );
 
 renderer.setPixelRatio(
-  Math.min(
-    devicePixelRatio,
-    2
-  )
+  Math.min(devicePixelRatio,2)
 );
 
-renderer.shadowMap.enabled =
-  true;
-
+renderer.shadowMap.enabled = true;
 renderer.shadowMap.type =
   THREE.PCFSoftShadowMap;
 
@@ -491,13 +492,13 @@ document.body.appendChild(
 
 
 /* =========================================================
-   LIGHT
+   LIGHTS
 ========================================================= */
 
 scene.add(
   new THREE.HemisphereLight(
     0x7fa1c9,
-    0x172014,
+    0x182015,
     1.35
   )
 );
@@ -505,16 +506,19 @@ scene.add(
 const moon =
   new THREE.DirectionalLight(
     0xb8ccff,
-    2.2
+    2.1
   );
 
 moon.position.set(
-  18,
+  20,
   35,
   12
 );
 
 moon.castShadow = true;
+
+moon.shadow.mapSize.width = 2048;
+moon.shadow.mapSize.height = 2048;
 
 scene.add(moon);
 
@@ -523,7 +527,7 @@ scene.add(moon);
    MATERIAL
 ========================================================= */
 
-function mat(
+function makeMat(
   color,
   roughness=1,
   metalness=0
@@ -547,18 +551,20 @@ const ground =
       220,
       220
     ),
-    mat(0x586257)
+    makeMat(0x586257)
   );
 
 ground.rotation.x =
-  -Math.PI/2;
+  -Math.PI / 2;
 
 ground.receiveShadow = true;
 
 scene.add(ground);
 
 
-/* ROAD */
+/* =========================================================
+   ROAD
+========================================================= */
 
 const road =
   new THREE.Mesh(
@@ -566,11 +572,11 @@ const road =
       26,
       220
     ),
-    mat(0x161a1f)
+    makeMat(0x161a1f)
   );
 
 road.rotation.x =
-  -Math.PI/2;
+  -Math.PI / 2;
 
 road.position.y =
   .012;
@@ -578,15 +584,13 @@ road.position.y =
 scene.add(road);
 
 
-/* ROAD MARKINGS */
-
 for(
   let z=-100;
   z<100;
   z+=8
 ){
 
-  const line =
+  const stripe =
     new THREE.Mesh(
       new THREE.BoxGeometry(
         .22,
@@ -598,13 +602,13 @@ for(
       })
     );
 
-  line.position.set(
+  stripe.position.set(
     0,
     .025,
     z
   );
 
-  scene.add(line);
+  scene.add(stripe);
 }
 
 
@@ -612,7 +616,7 @@ for(
    BUILDINGS
 ========================================================= */
 
-function building(
+function createBuilding(
   x,
   z,
   w,
@@ -631,30 +635,23 @@ function building(
         h,
         d
       ),
-      mat(color)
+      makeMat(color)
     );
 
   body.position.y =
     h/2;
 
   body.castShadow = true;
-
   body.receiveShadow = true;
 
   group.add(body);
 
 
   const cols =
-    Math.max(
-      1,
-      Math.floor(w/2.5)
-    );
+    Math.max(1,Math.floor(w/2.5));
 
   const rows =
-    Math.max(
-      1,
-      Math.floor(h/3)
-    );
+    Math.max(1,Math.floor(h/3));
 
 
   for(
@@ -669,31 +666,27 @@ function building(
       c++
     ){
 
-      if(
-        Math.random()<.18
-      ){
+      if(Math.random()<.18)
         continue;
-      }
 
 
       const wx =
-        -w/2+
-        1.1+
+        -w/2 +
+        1.1 +
         c*2.3;
 
       const wy =
-        1.4+
+        1.4 +
         r*2.5;
 
 
       if(
         wx>w/2-.5
-      ){
+      )
         continue;
-      }
 
 
-      const win =
+      const window =
         new THREE.Mesh(
           new THREE.PlaneGeometry(
             .58,
@@ -708,20 +701,20 @@ function building(
         );
 
 
-      win.position.set(
+      window.position.set(
         wx,
         wy,
-        d/2+.01
+        d/2+.012
       );
 
-      group.add(win);
+      group.add(window);
 
 
       const back =
-        win.clone();
+        window.clone();
 
       back.position.z =
-        -d/2-.01;
+        -d/2-.012;
 
       back.rotation.y =
         Math.PI;
@@ -741,25 +734,25 @@ function building(
 }
 
 
-building(
+createBuilding(
   -35,-32,
   22,18,18,
   0x252a31
 );
 
-building(
+createBuilding(
   35,-30,
   24,15,20,
   0x2a2d33
 );
 
-building(
+createBuilding(
   -40,25,
   20,13,18,
   0x30343a
 );
 
-building(
+createBuilding(
   38,28,
   22,19,18,
   0x272b31
@@ -770,46 +763,51 @@ building(
    OBSTACLES
 ========================================================= */
 
-function obstacle(
-  x,y,z,
-  sx,sy,sz
+function createObstacle(
+  x,
+  y,
+  z,
+  sx,
+  sy,
+  sz
 ){
 
-  const b =
+  const obj =
     new THREE.Mesh(
       new THREE.BoxGeometry(
-        sx,sy,sz
+        sx,
+        sy,
+        sz
       ),
-      mat(0x24292f)
+      makeMat(0x24292f)
     );
 
-  b.position.set(
+  obj.position.set(
     x,y,z
   );
 
-  b.castShadow = true;
+  obj.castShadow = true;
+  obj.receiveShadow = true;
 
-  b.receiveShadow = true;
-
-  scene.add(b);
+  scene.add(obj);
 }
 
-obstacle(
+createObstacle(
   12,2,-7,
   9,4,3
 );
 
-obstacle(
+createObstacle(
   -13,2,-13,
   3,4,10
 );
 
-obstacle(
+createObstacle(
   13,2,16,
   12,4,3
 );
 
-obstacle(
+createObstacle(
   -14,2,18,
   7,4,3
 );
@@ -819,32 +817,37 @@ obstacle(
    STREET LIGHTS
 ========================================================= */
 
-function streetLight(
-  x,z
+function createStreetLight(
+  x,
+  z
 ){
 
-  const g =
+  const group =
     new THREE.Group();
 
 
   const pole =
     new THREE.Mesh(
       new THREE.CylinderGeometry(
-        .08,.11,4.5,8
+        .08,
+        .11,
+        4.5,
+        8
       ),
-      mat(0x23272d)
+      makeMat(0x23272d)
     );
 
-  pole.position.y =
-    2.25;
+  pole.position.y = 2.25;
 
-  g.add(pole);
+  group.add(pole);
 
 
   const lamp =
     new THREE.Mesh(
       new THREE.SphereGeometry(
-        .14,10,10
+        .14,
+        10,
+        10
       ),
       new THREE.MeshBasicMaterial({
         color:0xffd98a
@@ -857,7 +860,7 @@ function streetLight(
     0
   );
 
-  g.add(lamp);
+  group.add(lamp);
 
 
   const light =
@@ -872,17 +875,18 @@ function streetLight(
     lamp.position
   );
 
-  g.add(light);
+  group.add(light);
 
 
-  g.position.set(
+  group.position.set(
     x,
     0,
     z
   );
 
-  scene.add(g);
+  scene.add(group);
 }
+
 
 for(
   let z=-75;
@@ -890,12 +894,12 @@ for(
   z+=25
 ){
 
-  streetLight(
+  createStreetLight(
     -16,
     z
   );
 
-  streetLight(
+  createStreetLight(
     16,
     z+8
   );
@@ -915,6 +919,8 @@ let playing = false;
 let yaw = 0;
 let pitch = 0;
 
+let fireHeld = false;
+
 let shootCooldown = 0;
 let recoil = 0;
 
@@ -922,10 +928,36 @@ let walkTime = 0;
 let footstepTimer = 0;
 
 let waveBusy = false;
+
 let nextWaveTimer = null;
+
 let zombieSoundTimer = null;
 
+
+/* keyboard */
+
 const keys = {};
+
+
+/* mobile joystick */
+
+let joyX = 0;
+let joyY = 0;
+let joyActive = false;
+let joyPointerId = null;
+
+const JOY_MAX = 50;
+
+
+/* mobile aim */
+
+let aimActive = false;
+let aimPointerId = null;
+let lastAimX = 0;
+let lastAimY = 0;
+
+
+/* objects */
 
 const zombies = [];
 const particles = [];
@@ -944,6 +976,7 @@ const clock =
 let audioCtx = null;
 let masterGain = null;
 
+
 function initAudio(){
 
   if(!audioCtx){
@@ -957,12 +990,14 @@ function initAudio(){
     masterGain =
       audioCtx.createGain();
 
-    masterGain.gain.value = .45;
+    masterGain.gain.value =
+      .45;
 
     masterGain.connect(
       audioCtx.destination
     );
   }
+
 
   if(
     audioCtx.state === "suspended"
@@ -973,7 +1008,7 @@ function initAudio(){
 }
 
 
-function tone(
+function playTone(
   frequency,
   duration,
   type="sine",
@@ -992,8 +1027,7 @@ function tone(
     audioCtx.createGain();
 
 
-  osc.type =
-    type;
+  osc.type = type;
 
 
   osc.frequency.setValueAtTime(
@@ -1027,10 +1061,7 @@ function tone(
 
 
   osc.connect(gain);
-
-  gain.connect(
-    masterGain
-  );
+  gain.connect(masterGain);
 
 
   osc.start();
@@ -1042,10 +1073,10 @@ function tone(
 }
 
 
-function noise(
+function playNoise(
   duration=.08,
   volume=.12,
-  filterFrequency=1400
+  cutoff=1400
 ){
 
   if(!audioCtx)
@@ -1097,7 +1128,7 @@ function noise(
     "lowpass";
 
   filter.frequency.value =
-    filterFrequency;
+    cutoff;
 
 
   const gain =
@@ -1116,9 +1147,7 @@ function noise(
 
 
   source.connect(filter);
-
   filter.connect(gain);
-
   gain.connect(masterGain);
 
 
@@ -1133,13 +1162,13 @@ function noise(
 
 function soundGun(){
 
-  noise(
+  playNoise(
     .075,
     .28,
     2200
   );
 
-  tone(
+  playTone(
     110,
     .09,
     "sawtooth",
@@ -1151,7 +1180,7 @@ function soundGun(){
 
 function soundHit(){
 
-  tone(
+  playTone(
     220,
     .07,
     "square",
@@ -1159,7 +1188,7 @@ function soundHit(){
     110
   );
 
-  noise(
+  playNoise(
     .045,
     .07,
     900
@@ -1169,7 +1198,7 @@ function soundHit(){
 
 function soundDamage(){
 
-  tone(
+  playTone(
     95,
     .18,
     "sawtooth",
@@ -1181,7 +1210,7 @@ function soundDamage(){
 
 function soundStep(){
 
-  noise(
+  playNoise(
     .045,
     .035,
     550
@@ -1196,7 +1225,7 @@ function soundZombie(){
     Math.random()*45;
 
 
-  tone(
+  playTone(
     base,
     .35,
     "sawtooth",
@@ -1207,7 +1236,7 @@ function soundZombie(){
 
   setTimeout(
     ()=>{
-      tone(
+      playTone(
         base*.7,
         .28,
         "sawtooth",
@@ -1222,7 +1251,7 @@ function soundZombie(){
 
 function soundWave(){
 
-  tone(
+  playTone(
     230,
     .15,
     "sine",
@@ -1233,7 +1262,7 @@ function soundWave(){
 
   setTimeout(
     ()=>{
-      tone(
+      playTone(
         310,
         .22,
         "sine",
@@ -1248,7 +1277,7 @@ function soundWave(){
 
 function soundGameOver(){
 
-  tone(
+  playTone(
     180,
     .18,
     "sine",
@@ -1259,7 +1288,7 @@ function soundGameOver(){
 
   setTimeout(
     ()=>{
-      tone(
+      playTone(
         120,
         .25,
         "sine",
@@ -1273,7 +1302,7 @@ function soundGameOver(){
 
   setTimeout(
     ()=>{
-      tone(
+      playTone(
         70,
         .42,
         "sine",
@@ -1320,7 +1349,7 @@ function updateHUD(){
 
 
   document.getElementById(
-    "hpbar"
+    "hpBar"
   ).style.width =
     Math.max(
       0,
@@ -1345,6 +1374,12 @@ weapon.position.set(
   .48,
   -.43,
   -.85
+);
+
+weapon.rotation.set(
+  -.05,
+  -.06,
+  0
 );
 
 
@@ -1387,26 +1422,23 @@ function weaponPart(
   rz=0
 ){
 
-  const m =
+  const mesh =
     new THREE.Mesh(
       geo,
       material
     );
 
-
-  m.position.set(
+  mesh.position.set(
     x,y,z
   );
 
-
-  m.rotation.set(
+  mesh.rotation.set(
     rx,ry,rz
   );
 
+  weapon.add(mesh);
 
-  weapon.add(m);
-
-  return m;
+  return mesh;
 }
 
 
@@ -1418,7 +1450,6 @@ weaponPart(
   0,.04,0
 );
 
-
 weaponPart(
   new THREE.BoxGeometry(
     .18,.16,.35
@@ -1426,7 +1457,6 @@ weaponPart(
   gunDark,
   0,.17,-.24
 );
-
 
 weaponPart(
   new THREE.BoxGeometry(
@@ -1437,7 +1467,6 @@ weaponPart(
   .14,0,0
 );
 
-
 weaponPart(
   new THREE.BoxGeometry(
     .08,.08,.55
@@ -1445,7 +1474,6 @@ weaponPart(
   gunMaterial,
   0,.08,-.60
 );
-
 
 weaponPart(
   new THREE.SphereGeometry(
@@ -1455,7 +1483,6 @@ weaponPart(
   .19,-.24,.05
 );
 
-
 weaponPart(
   new THREE.SphereGeometry(
     .18,12,10
@@ -1463,7 +1490,6 @@ weaponPart(
   handMaterial,
   -.21,-.13,-.02
 );
-
 
 weaponPart(
   new THREE.CylinderGeometry(
@@ -1474,7 +1500,6 @@ weaponPart(
   0,0,-.25
 );
 
-
 weaponPart(
   new THREE.CylinderGeometry(
     .12,.15,.58,10
@@ -1484,6 +1509,8 @@ weaponPart(
   0,0,.4
 );
 
+
+/* muzzle */
 
 const muzzle =
   new THREE.Mesh(
@@ -1499,7 +1526,7 @@ muzzle.position.set(
   0,.08,-.91
 );
 
-muzzle.visible=false;
+muzzle.visible = false;
 
 weapon.add(
   muzzle
@@ -1507,7 +1534,7 @@ weapon.add(
 
 
 /* =========================================================
-   ZOMBIE
+   ZOMBIES
 ========================================================= */
 
 const zombieEye =
@@ -1529,40 +1556,35 @@ const zombieTeeth =
   });
 
 
-function zpart(
-  z,
-  geo,
+function zombiePart(
+  group,
+  geometry,
   material,
-  x,y,zp,
+  x,y,z,
   rx=0,
   ry=0,
   rz=0
 ){
 
-  const m =
+  const mesh =
     new THREE.Mesh(
-      geo,
+      geometry,
       material
     );
 
-
-  m.position.set(
-    x,y,zp
+  mesh.position.set(
+    x,y,z
   );
 
-
-  m.rotation.set(
+  mesh.rotation.set(
     rx,ry,rz
   );
 
+  mesh.castShadow = true;
 
-  m.castShadow =
-    true;
+  group.add(mesh);
 
-
-  z.add(m);
-
-  return m;
+  return mesh;
 }
 
 
@@ -1572,40 +1594,37 @@ function spawnZombie(){
     Math.random();
 
 
-  let type =
-    "normal";
+  let type = "normal";
 
 
   if(
     roll<.17
   ){
 
-    type =
-      "runner";
+    type = "runner";
 
   }
   else if(
     roll<.29
   ){
 
-    type =
-      "brute";
+    type = "brute";
   }
 
 
-  const z =
+  const zombie =
     new THREE.Group();
 
-
-  z.userData.isZombie =
+  zombie.userData.isZombie =
     true;
 
-  z.userData.type =
+  zombie.userData.type =
     type;
 
 
-  let scale=1;
-  let hpMax=1;
+  let scale = 1;
+  let hpMax = 1;
+
   let speed =
     .026+
     Math.random()*.015;
@@ -1615,9 +1634,8 @@ function spawnZombie(){
     type==="runner"
   ){
 
-    scale=.86;
-
-    hpMax=1;
+    scale = .86;
+    hpMax = 1;
 
     speed =
       .05+
@@ -1629,9 +1647,8 @@ function spawnZombie(){
     type==="brute"
   ){
 
-    scale=1.25;
-
-    hpMax=3;
+    scale = 1.25;
+    hpMax = 3;
 
     speed =
       .016+
@@ -1640,7 +1657,7 @@ function spawnZombie(){
 
 
   const skin =
-    mat(
+    makeMat(
       type==="brute"
         ?0x556936
         :0x718f4b,
@@ -1649,36 +1666,40 @@ function spawnZombie(){
 
 
   const darkSkin =
-    mat(
-      0x3d5028
+    makeMat(
+      0x3d5028,
+      1
     );
 
 
   const shirt =
-    mat(
+    makeMat(
       type==="runner"
         ?0x4d3432
         :type==="brute"
           ?0x343943
-          :0x414954
+          :0x414954,
+      1
     );
 
 
   const pants =
-    mat(
-      0x1e232a
+    makeMat(
+      0x1e232a,
+      1
     );
 
 
   const blood =
-    mat(
-      0x721010
+    makeMat(
+      0x721010,
+      .9
     );
 
 
   const body =
-    zpart(
-      z,
+    zombiePart(
+      zombie,
       new THREE.BoxGeometry(
         1.28,1.7,.74
       ),
@@ -1687,8 +1708,8 @@ function spawnZombie(){
     );
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.BoxGeometry(
       .27,.46,.07
     ),
@@ -1698,8 +1719,8 @@ function spawnZombie(){
   );
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.CylinderGeometry(
       .27,.31,.30,10
     ),
@@ -1709,8 +1730,8 @@ function spawnZombie(){
 
 
   const head =
-    zpart(
-      z,
+    zombiePart(
+      zombie,
       new THREE.SphereGeometry(
         .72,16,12
       ),
@@ -1726,8 +1747,8 @@ function spawnZombie(){
   );
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.SphereGeometry(
       .18,10,8
     ),
@@ -1736,8 +1757,8 @@ function spawnZombie(){
   );
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.SphereGeometry(
       .18,10,8
     ),
@@ -1746,8 +1767,8 @@ function spawnZombie(){
   );
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.BoxGeometry(
       .82,.28,.70
     ),
@@ -1756,8 +1777,8 @@ function spawnZombie(){
   );
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.SphereGeometry(
       .12,10,10
     ),
@@ -1766,8 +1787,8 @@ function spawnZombie(){
   );
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.SphereGeometry(
       .12,10,10
     ),
@@ -1776,8 +1797,8 @@ function spawnZombie(){
   );
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.SphereGeometry(
       .045,8,8
     ),
@@ -1786,8 +1807,8 @@ function spawnZombie(){
   );
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.SphereGeometry(
       .045,8,8
     ),
@@ -1796,8 +1817,8 @@ function spawnZombie(){
   );
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.BoxGeometry(
       .18,.22,.22
     ),
@@ -1806,8 +1827,8 @@ function spawnZombie(){
   );
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.BoxGeometry(
       .64,.22,.08
     ),
@@ -1822,8 +1843,8 @@ function spawnZombie(){
     i++
   ){
 
-    zpart(
-      z,
+    zombiePart(
+      zombie,
       new THREE.BoxGeometry(
         .09,.13,.06
       ),
@@ -1835,8 +1856,8 @@ function spawnZombie(){
   }
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.BoxGeometry(
       .17,.40,.07
     ),
@@ -1846,8 +1867,8 @@ function spawnZombie(){
   );
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.BoxGeometry(
       .12,.25,.07
     ),
@@ -1858,8 +1879,8 @@ function spawnZombie(){
 
 
   const armL =
-    zpart(
-      z,
+    zombiePart(
+      zombie,
       new THREE.CylinderGeometry(
         .22,.28,1.55,10
       ),
@@ -1870,8 +1891,8 @@ function spawnZombie(){
 
 
   const armR =
-    zpart(
-      z,
+    zombiePart(
+      zombie,
       new THREE.CylinderGeometry(
         .22,.28,1.55,10
       ),
@@ -1881,8 +1902,8 @@ function spawnZombie(){
     );
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.SphereGeometry(
       .27,10,8
     ),
@@ -1891,8 +1912,8 @@ function spawnZombie(){
   );
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.SphereGeometry(
       .27,10,8
     ),
@@ -1902,8 +1923,8 @@ function spawnZombie(){
 
 
   const legL =
-    zpart(
-      z,
+    zombiePart(
+      zombie,
       new THREE.CylinderGeometry(
         .24,.28,1.55,10
       ),
@@ -1913,8 +1934,8 @@ function spawnZombie(){
 
 
   const legR =
-    zpart(
-      z,
+    zombiePart(
+      zombie,
       new THREE.CylinderGeometry(
         .24,.28,1.55,10
       ),
@@ -1923,8 +1944,8 @@ function spawnZombie(){
     );
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.BoxGeometry(
       .50,.28,.86
     ),
@@ -1933,8 +1954,8 @@ function spawnZombie(){
   );
 
 
-  zpart(
-    z,
+  zombiePart(
+    zombie,
     new THREE.BoxGeometry(
       .50,.28,.86
     ),
@@ -1943,12 +1964,12 @@ function spawnZombie(){
   );
 
 
-  z.scale.setScalar(
+  zombie.scale.setScalar(
     scale
   );
 
 
-  z.userData.parts = {
+  zombie.userData.parts = {
     body,
     head,
     armL,
@@ -1958,16 +1979,16 @@ function spawnZombie(){
   };
 
 
-  z.userData.hp =
+  zombie.userData.hp =
     hpMax;
 
-  z.userData.speed =
+  zombie.userData.speed =
     speed;
 
-  z.userData.cooldown =
+  zombie.userData.cooldown =
     0;
 
-  z.userData.phase =
+  zombie.userData.phase =
     Math.random()*
     Math.PI*2;
 
@@ -1982,20 +2003,22 @@ function spawnZombie(){
     Math.random()*18;
 
 
-  z.position.set(
+  zombie.position.set(
     camera.position.x+
-      Math.cos(angle)*
-      distance,
+      Math.cos(angle)*distance,
     0,
     camera.position.z+
-      Math.sin(angle)*
-      distance
+      Math.sin(angle)*distance
   );
 
 
-  scene.add(z);
+  scene.add(
+    zombie
+  );
 
-  zombies.push(z);
+  zombies.push(
+    zombie
+  );
 
   updateHUD();
 }
@@ -2013,12 +2036,13 @@ function spawnWave(){
 
   soundWave();
 
-  let amount =
+
+  const amount =
     3+
     wave*2;
 
 
-  let spawned=0;
+  let spawned = 0;
 
 
   const timer =
@@ -2026,10 +2050,7 @@ function spawnWave(){
       ()=>{
         if(!playing){
 
-          clearInterval(
-            timer
-          );
-
+          clearInterval(timer);
           return;
         }
 
@@ -2043,9 +2064,7 @@ function spawnWave(){
           spawned>=amount
         ){
 
-          clearInterval(
-            timer
-          );
+          clearInterval(timer);
         }
 
       },
@@ -2068,7 +2087,7 @@ function bloodBurst(
     i++
   ){
 
-    const p =
+    const particle =
       new THREE.Mesh(
         new THREE.SphereGeometry(
           .035+
@@ -2085,12 +2104,12 @@ function bloodBurst(
       );
 
 
-    p.position.copy(
+    particle.position.copy(
       point
     );
 
 
-    p.userData.velocity =
+    particle.userData.velocity =
       new THREE.Vector3(
         (Math.random()-.5)*2,
         Math.random()*2,
@@ -2098,14 +2117,18 @@ function bloodBurst(
       );
 
 
-    p.userData.life =
+    particle.userData.life =
       .3+
       Math.random()*.3;
 
 
-    scene.add(p);
+    scene.add(
+      particle
+    );
 
-    particles.push(p);
+    particles.push(
+      particle
+    );
   }
 }
 
@@ -2120,13 +2143,13 @@ function shoot(){
     !playing ||
     shootCooldown>0
   ){
-
     return;
   }
 
 
   shootCooldown =
     .16;
+
 
   recoil =
     .12;
@@ -2141,30 +2164,28 @@ function shoot(){
 
   setTimeout(
     ()=>{
-      muzzle.visible=false;
+      muzzle.visible =
+        false;
     },
     45
   );
 
 
   raycaster.setFromCamera(
-    new THREE.Vector2(
-      0,
-      0
-    ),
+    new THREE.Vector2(0,0),
     camera
   );
 
 
-  const objects=[];
+  const targets = [];
 
 
   zombies.forEach(
-    z=>{
-      z.traverse(
+    zombie=>{
+      zombie.traverse(
         obj=>{
           if(obj.isMesh)
-            objects.push(obj);
+            targets.push(obj);
         }
       );
     }
@@ -2173,7 +2194,7 @@ function shoot(){
 
   const hits =
     raycaster.intersectObjects(
-      objects,
+      targets,
       false
     );
 
@@ -2181,7 +2202,6 @@ function shoot(){
   if(
     hits.length===0
   ){
-
     return;
   }
 
@@ -2203,7 +2223,6 @@ function shoot(){
   if(
     !target.userData.isZombie
   ){
-
     return;
   }
 
@@ -2219,19 +2238,19 @@ function shoot(){
   );
 
 
-  const hit =
+  const marker =
     document.getElementById(
-      "hit"
+      "hitMarker"
     );
 
 
-  hit.style.opacity =
+  marker.style.opacity =
     "1";
 
 
   setTimeout(
     ()=>{
-      hit.style.opacity =
+      marker.style.opacity =
         "0";
     },
     90
@@ -2248,9 +2267,7 @@ function shoot(){
       );
 
 
-    if(
-      index!==-1
-    ){
+    if(index!==-1){
 
       score +=
         target.userData.type==="brute"
@@ -2283,20 +2300,15 @@ function shoot(){
 
 
 /* =========================================================
-   MOVE
+   PLAYER MOVEMENT
 ========================================================= */
 
-function move(
+function movePlayer(
   delta
 ){
 
   if(!playing)
     return;
-
-
-  const speed =
-    6.5*
-    delta;
 
 
   const forward =
@@ -2315,32 +2327,59 @@ function move(
     );
 
 
-  const dir =
+  const direction =
     new THREE.Vector3();
 
 
+  /* keyboard */
+
   if(keys.KeyW)
-    dir.add(forward);
+    direction.add(forward);
 
   if(keys.KeyS)
-    dir.sub(forward);
-
-  if(keys.KeyA)
-    dir.sub(right);
+    direction.sub(forward);
 
   if(keys.KeyD)
-    dir.add(right);
+    direction.add(right);
+
+  if(keys.KeyA)
+    direction.sub(right);
+
+
+  /* mobile joystick */
+
+  if(
+    Math.abs(joyX)>.02 ||
+    Math.abs(joyY)>.02
+  ){
+
+    direction.addScaledVector(
+      right,
+      joyX
+    );
+
+
+    direction.addScaledVector(
+      forward,
+      -joyY
+    );
+  }
 
 
   if(
-    dir.lengthSq()>0
+    direction.lengthSq()>0
   ){
 
-    dir.normalize();
+    direction.normalize();
+
+
+    const speed =
+      6.5*
+      delta;
 
 
     camera.position.addScaledVector(
-      dir,
+      direction,
       speed
     );
 
@@ -2376,6 +2415,7 @@ function move(
       Math.cos(
         walkTime*.5
       )*.012;
+
   }
 
 
@@ -2408,9 +2448,8 @@ function updateZombies(
   delta
 ){
 
-  const now =
-    performance.now()*
-    .001;
+  const time =
+    performance.now()*.001;
 
 
   for(
@@ -2419,12 +2458,12 @@ function updateZombies(
     i--
   ){
 
-    const z =
+    const zombie =
       zombies[i];
 
 
     if(
-      !z.parent
+      !zombie.parent
     ){
       continue;
     }
@@ -2432,15 +2471,15 @@ function updateZombies(
 
     const dx =
       camera.position.x-
-      z.position.x;
+      zombie.position.x;
 
 
     const dz =
       camera.position.z-
-      z.position.z;
+      zombie.position.z;
 
 
-    const dist =
+    const distance =
       Math.max(
         .001,
         Math.hypot(
@@ -2451,24 +2490,24 @@ function updateZombies(
 
 
     if(
-      dist>1.75
+      distance>1.75
     ){
 
-      z.position.x +=
-        dx/dist*
-        z.userData.speed*
+      zombie.position.x +=
+        dx/distance*
+        zombie.userData.speed*
         60*
         delta;
 
 
-      z.position.z +=
-        dz/dist*
-        z.userData.speed*
+      zombie.position.z +=
+        dz/distance*
+        zombie.userData.speed*
         60*
         delta;
 
 
-      z.rotation.y =
+      zombie.rotation.y =
         Math.atan2(
           dx,
           dz
@@ -2476,82 +2515,81 @@ function updateZombies(
 
 
       const p =
-        z.userData.parts;
+        zombie.userData.parts;
 
 
-      const w =
+      const walk =
         Math.sin(
-          now*7+
-          z.userData.phase
+          time*7+
+          zombie.userData.phase
         );
 
 
       p.armL.rotation.z =
         -.18+
-        w*.32;
+        walk*.32;
 
 
       p.armR.rotation.z =
         .18-
-        w*.32;
+        walk*.32;
 
 
       p.legL.rotation.x =
-        w*.32;
+        walk*.32;
 
 
       p.legR.rotation.x =
-        -w*.32;
+        -walk*.32;
 
 
       p.body.position.y =
         2+
-        Math.abs(w)*.025;
+        Math.abs(walk)*.025;
 
 
       p.head.position.y =
         3.68+
-        Math.abs(w)*.025;
+        Math.abs(walk)*.025;
 
-    }
-    else{
+    }else{
 
-      z.userData.cooldown -=
+      zombie.userData.cooldown -=
         delta;
 
 
       if(
-        z.userData.cooldown<=0
+        zombie.userData.cooldown<=0
       ){
 
         hp -=
-          z.userData.type==="brute"
+          zombie.userData.type==="brute"
             ?12
-            :z.userData.type==="runner"
+            :zombie.userData.type==="runner"
               ?7
               :8;
 
 
-        z.userData.cooldown =
+        zombie.userData.cooldown =
           .75;
 
 
         soundDamage();
 
 
-        const damage =
+        const flash =
           document.getElementById(
-            "damage"
+            "damageFlash"
           );
 
 
-        damage.style.opacity =
+        flash.style.opacity =
           "1";
 
 
         setTimeout(
           ()=>{
-            damage.style.opacity =
+            flash.style.opacity =
               "0";
           },
           120
@@ -2584,12 +2622,14 @@ function updateZombies(
     !waveBusy
   ){
 
-    waveBusy=true;
+    waveBusy =
+      true;
 
 
     nextWaveTimer =
       setTimeout(
         ()=>{
+
           if(playing){
 
             wave++;
@@ -2599,7 +2639,10 @@ function updateZombies(
             spawnWave();
           }
 
-          waveBusy=false;
+
+          waveBusy =
+            false;
+
         },
         1700
       );
@@ -2624,38 +2667,40 @@ function updateParticles(
     i--
   ){
 
-    const p =
+    const particle =
       particles[i];
 
 
-    p.position.x +=
-      p.userData.velocity.x*
+    particle.position.x +=
+      particle.userData.velocity.x*
       delta;
 
 
-    p.position.y +=
-      p.userData.velocity.y*
+    particle.position.y +=
+      particle.userData.velocity.y*
       delta;
 
 
-    p.position.z +=
-      p.userData.velocity.z*
+    particle.position.z +=
+      particle.userData.velocity.z*
       delta;
 
 
-    p.userData.velocity.y -=
+    particle.userData.velocity.y -=
       8*delta;
 
 
-    p.userData.life -=
+    particle.userData.life -=
       delta;
 
 
     if(
-      p.userData.life<=0
+      particle.userData.life<=0
     ){
 
-      scene.remove(p);
+      scene.remove(
+        particle
+      );
 
       particles.splice(
         i,
@@ -2696,16 +2741,16 @@ function zombieSoundLoop(){
 
 addEventListener(
   "keydown",
-  e=>{
-    keys[e.code]=true;
+  event=>{
+    keys[event.code]=true;
   }
 );
 
 
 addEventListener(
   "keyup",
-  e=>{
-    keys[e.code]=false;
+  event=>{
+    keys[event.code]=false;
   }
 );
 
@@ -2716,31 +2761,27 @@ addEventListener(
 
 addEventListener(
   "mousemove",
-  e=>{
+  event=>{
 
     if(
       !playing ||
       document.pointerLockElement !==
       renderer.domElement
     ){
-
       return;
     }
 
 
     yaw -=
-      e.movementX*
-      .0025;
+      event.movementX*.0025;
 
 
     pitch -=
-      e.movementY*
-      .0025;
+      event.movementY*.0025;
 
 
     const limit =
-      Math.PI/2-
-      .04;
+      Math.PI/2-.04;
 
 
     pitch =
@@ -2764,40 +2805,52 @@ addEventListener(
 
 
 /* =========================================================
-   PC SHOOT
+   PC FIRE
 ========================================================= */
 
 addEventListener(
   "mousedown",
-  e=>{
+  event=>{
 
     if(
-      e.button===0 &&
-      playing &&
-      !window.matchMedia(
-        "(max-width:900px)"
-      ).matches
+      event.button===0 &&
+      playing
     ){
 
-      shoot();
+      fireHeld = true;
+
+
+      if(
+        document.pointerLockElement !==
+        renderer.domElement
+      ){
+
+        renderer.domElement.requestPointerLock();
+      }
     }
   }
 );
 
 
-/* =========================================================
-   POINTER LOCK PC
-========================================================= */
+addEventListener(
+  "mouseup",
+  event=>{
+
+    if(
+      event.button===0
+    ){
+
+      fireHeld = false;
+    }
+  }
+);
+
 
 renderer.domElement.addEventListener(
   "click",
   ()=>{
-
     if(
       playing &&
-      !window.matchMedia(
-        "(max-width:900px)"
-      ).matches &&
       document.pointerLockElement !==
       renderer.domElement
     ){
@@ -2809,58 +2862,168 @@ renderer.domElement.addEventListener(
 
 
 /* =========================================================
-   MOBILE MOVEMENT
+   MOBILE JOYSTICK
 ========================================================= */
 
-document.querySelectorAll(
-  ".mbtn"
-).forEach(
-  button=>{
+const joystickZone =
+  document.getElementById(
+    "joystickZone"
+  );
 
-    const code =
-      button.dataset.key;
+const joystickKnob =
+  document.getElementById(
+    "joystickKnob"
+  );
 
 
-    button.addEventListener(
-      "touchstart",
-      e=>{
+function resetJoystick(){
 
-        e.preventDefault();
+  joyX=0;
+  joyY=0;
+  joyActive=false;
+  joyPointerId=null;
 
-        keys[code]=true;
-      },
-      {
-        passive:false
-      }
+
+  joystickKnob.style.transform =
+    "translate(0px,0px)";
+}
+
+
+function updateJoystick(
+  clientX,
+  clientY
+){
+
+  const rect =
+    joystickZone.getBoundingClientRect();
+
+
+  const centerX =
+    rect.left+87;
+
+  const centerY =
+    rect.bottom-89;
+
+
+  let dx =
+    clientX-centerX;
+
+  let dy =
+    clientY-centerY;
+
+
+  const distance =
+    Math.hypot(
+      dx,
+      dy
     );
 
 
-    button.addEventListener(
-      "touchend",
-      e=>{
+  if(
+    distance>JOY_MAX
+  ){
 
-        e.preventDefault();
+    dx =
+      dx/distance*
+      JOY_MAX;
 
-        keys[code]=false;
-      },
-      {
-        passive:false
-      }
+    dy =
+      dy/distance*
+      JOY_MAX;
+  }
+
+
+  joyX =
+    dx/JOY_MAX;
+
+  joyY =
+    dy/JOY_MAX;
+
+
+  joystickKnob.style.transform =
+    `translate(${dx}px,${dy}px)`;
+}
+
+
+joystickZone.addEventListener(
+  "pointerdown",
+  event=>{
+
+    if(!playing)
+      return;
+
+
+    joyActive=true;
+
+    joyPointerId =
+      event.pointerId;
+
+
+    joystickZone.setPointerCapture(
+      event.pointerId
     );
 
 
-    button.addEventListener(
-      "touchcancel",
-      e=>{
-
-        e.preventDefault();
-
-        keys[code]=false;
-      },
-      {
-        passive:false
-      }
+    updateJoystick(
+      event.clientX,
+      event.clientY
     );
+
+
+    event.preventDefault();
+  }
+);
+
+
+joystickZone.addEventListener(
+  "pointermove",
+  event=>{
+
+    if(
+      !joyActive ||
+      event.pointerId!==joyPointerId
+    )
+      return;
+
+
+    updateJoystick(
+      event.clientX,
+      event.clientY
+    );
+
+
+    event.preventDefault();
+  }
+);
+
+
+joystickZone.addEventListener(
+  "pointerup",
+  event=>{
+
+    if(
+      event.pointerId===joyPointerId
+    ){
+
+      resetJoystick();
+    }
+
+
+    event.preventDefault();
+  }
+);
+
+
+joystickZone.addEventListener(
+  "pointercancel",
+  event=>{
+
+    if(
+      event.pointerId===joyPointerId
+    ){
+
+      resetJoystick();
+    }
   }
 );
 
@@ -2875,61 +3038,63 @@ const lookZone =
   );
 
 
-let lastTouchX = 0;
-let lastTouchY = 0;
-
-
 lookZone.addEventListener(
-  "touchstart",
-  e=>{
-
-    e.preventDefault();
-
-    const t =
-      e.touches[0];
-
-    lastTouchX =
-      t.clientX;
-
-    lastTouchY =
-      t.clientY;
-  },
-  {
-    passive:false
-  }
-);
-
-
-lookZone.addEventListener(
-  "touchmove",
-  e=>{
-
-    e.preventDefault();
+  "pointerdown",
+  event=>{
 
     if(!playing)
       return;
 
 
-    const t =
-      e.touches[0];
+    aimActive =
+      true;
+
+    aimPointerId =
+      event.pointerId;
+
+
+    lastAimX =
+      event.clientX;
+
+    lastAimY =
+      event.clientY;
+
+
+    lookZone.setPointerCapture(
+      event.pointerId
+    );
+
+
+    event.preventDefault();
+  }
+);
+
+
+lookZone.addEventListener(
+  "pointermove",
+  event=>{
+
+    if(
+      !aimActive ||
+      event.pointerId!==aimPointerId
+    )
+      return;
 
 
     const dx =
-      t.clientX-
-      lastTouchX;
+      event.clientX-lastAimX;
 
 
     const dy =
-      t.clientY-
-      lastTouchY;
+      event.clientY-lastAimY;
 
 
-    lastTouchX =
-      t.clientX;
+    lastAimX =
+      event.clientX;
 
 
-    lastTouchY =
-      t.clientY;
+    lastAimY =
+      event.clientY;
 
 
     yaw -=
@@ -2941,8 +3106,7 @@ lookZone.addEventListener(
 
 
     const limit =
-      Math.PI/2-
-      .04;
+      Math.PI/2-.04;
 
 
     pitch =
@@ -2958,13 +3122,42 @@ lookZone.addEventListener(
     camera.rotation.y =
       yaw;
 
-
     camera.rotation.x =
       pitch;
-  },
-  {
-    passive:false
+
+
+    event.preventDefault();
   }
+);
+
+
+function resetAim(){
+
+  aimActive=false;
+  aimPointerId=null;
+}
+
+
+lookZone.addEventListener(
+  "pointerup",
+  event=>{
+
+    if(
+      event.pointerId===aimPointerId
+    ){
+
+      resetAim();
+    }
+
+
+    event.preventDefault();
+  }
+);
+
+
+lookZone.addEventListener(
+  "pointercancel",
+  resetAim
 );
 
 
@@ -2974,41 +3167,77 @@ lookZone.addEventListener(
 
 const fireButton =
   document.getElementById(
-    "fire"
+    "fireButton"
   );
 
 
 fireButton.addEventListener(
-  "touchstart",
-  e=>{
+  "pointerdown",
+  event=>{
 
-    e.preventDefault();
+    if(!playing)
+      return;
 
-    if(playing){
-      shoot();
-    }
-  },
-  {
-    passive:false
+
+    fireHeld=true;
+
+
+    fireButton.classList.add(
+      "active"
+    );
+
+
+    fireButton.setPointerCapture(
+      event.pointerId
+    );
+
+
+    event.preventDefault();
   }
 );
 
 
-/* juga bisa tap FIRE */
+function releaseFire(){
+
+  fireHeld=false;
+
+  fireButton.classList.remove(
+    "active"
+  );
+}
+
 
 fireButton.addEventListener(
-  "click",
-  e=>{
+  "pointerup",
+  event=>{
+    releaseFire();
+    event.preventDefault();
+  }
+);
 
-    if(playing){
-      shoot();
+
+fireButton.addEventListener(
+  "pointercancel",
+  releaseFire
+);
+
+
+fireButton.addEventListener(
+  "pointerleave",
+  event=>{
+
+    if(
+      event.buttons===0
+    ){
+
+      releaseFire();
     }
   }
 );
 
 
 /* =========================================================
-   CLEAR
+   CLEAR GAME
 ========================================================= */
 
 function clearGame(){
@@ -3035,7 +3264,7 @@ function clearGame(){
 
 
 /* =========================================================
-   START
+   START GAME
 ========================================================= */
 
 function startGame(){
@@ -3069,14 +3298,20 @@ function startGame(){
 
 
   hp=100;
-
   score=0;
-
   wave=1;
 
-  yaw=0;
 
+  yaw=0;
   pitch=0;
+
+
+  joyX=0;
+  joyY=0;
+
+
+  fireHeld=false;
+
 
   waveBusy=false;
 
@@ -3102,14 +3337,14 @@ function startGame(){
   );
 
 
-  playing=true;
-
-
   updateHUD();
 
 
+  playing=true;
+
+
   document.getElementById(
-    "start"
+    "startScreen"
   ).style.display =
     "none";
 
@@ -3123,11 +3358,10 @@ function startGame(){
   );
 
 
-  /* pointer lock hanya PC */
-
+  /* PC pointer lock */
   if(
-    !window.matchMedia(
-      "(max-width:900px)"
+    window.matchMedia(
+      "(min-width:901px)"
     ).matches
   ){
 
@@ -3144,6 +3378,12 @@ function gameOver(){
 
   playing=false;
 
+  fireHeld=false;
+
+  resetJoystick();
+
+  resetAim();
+
 
   if(nextWaveTimer){
 
@@ -3151,7 +3391,8 @@ function gameOver(){
       nextWaveTimer
     );
 
-    nextWaveTimer=null;
+    nextWaveTimer =
+      null;
   }
 
 
@@ -3161,7 +3402,8 @@ function gameOver(){
       zombieSoundTimer
     );
 
-    zombieSoundTimer=null;
+    zombieSoundTimer =
+      null;
   }
 
 
@@ -3176,34 +3418,33 @@ function gameOver(){
   }
 
 
-  const start =
+  const screen =
     document.getElementById(
-      "start"
+      "startScreen"
     );
 
 
-  start.style.display =
+  screen.style.display =
     "flex";
 
 
-  start.innerHTML =
-  `
-    <div class="card">
+  screen.innerHTML = `
+    <div class="startCard">
 
       <div class="logo">
         GAME <span>OVER</span>
       </div>
 
-      <div class="sub">
+      <div class="subtitle">
         NIGHTFALL PROTOCOL TERMINATED
       </div>
 
-      <div class="info">
+      <div class="startInfo">
         🎯 SCORE: ${score}<br>
         🌊 WAVE: ${wave}
       </div>
 
-      <button id="restartBtn">
+      <button id="restartButton">
         MAIN LAGI
       </button>
 
@@ -3212,11 +3453,10 @@ function gameOver(){
 
 
   document.getElementById(
-    "restartBtn"
-  ).onclick =
-    ()=>{
-      location.reload();
-    };
+    "restartButton"
+  ).onclick = () =>{
+    location.reload();
+  };
 }
 
 
@@ -3225,7 +3465,7 @@ function gameOver(){
 ========================================================= */
 
 document.getElementById(
-  "startBtn"
+  "startButton"
 ).onclick =
   startGame;
 
@@ -3242,7 +3482,9 @@ addEventListener(
       innerWidth/
       innerHeight;
 
+
     camera.updateProjectionMatrix();
+
 
     renderer.setSize(
       innerWidth,
@@ -3253,7 +3495,7 @@ addEventListener(
 
 
 /* =========================================================
-   LOOP
+   MAIN LOOP
 ========================================================= */
 
 function animate(){
@@ -3270,11 +3512,31 @@ function animate(){
     );
 
 
-  move(delta);
+  movePlayer(
+    delta
+  );
 
-  updateZombies(delta);
 
-  updateParticles(delta);
+  updateZombies(
+    delta
+  );
+
+
+  updateParticles(
+    delta
+  );
+
+
+  /* tahan FIRE = auto fire */
+
+  if(
+    playing &&
+    fireHeld &&
+    shootCooldown<=0
+  ){
+
+    shoot();
+  }
 
 
   shootCooldown =
@@ -3308,11 +3570,14 @@ function animate(){
 }
 
 
+/* =========================================================
+   INIT
+========================================================= */
+
 updateHUD();
 
 animate();
 
 </script>
-
 </body>
 </html>
