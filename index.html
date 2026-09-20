@@ -230,7 +230,16 @@ while(target.parent&&!zombies.includes(target))
 target=target.parent;
 
 if(zombies.includes(target)){
-scene.remove(target);
+target.traverse(o=>{
+  if(o.isMesh && o.material && o.material.color){
+    o.material=o.material.clone();
+    o.material.color.set(0xff0000);
+  }
+});
+
+setTimeout(()=>{
+  scene.remove(target);
+},120);
 zombies.splice(zombies.indexOf(target),1);
 score+=10;
 updateHUD();
