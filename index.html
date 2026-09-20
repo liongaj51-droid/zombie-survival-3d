@@ -137,6 +137,325 @@ function spawnZombie(){
 
   const z = new THREE.Group();
 
+  // =========================
+  // MATERIAL
+  // =========================
+  const skin = new THREE.MeshStandardMaterial({
+    color:0x718b4a,
+    roughness:0.95
+  });
+
+  const skinDark = new THREE.MeshStandardMaterial({
+    color:0x43552d,
+    roughness:1
+  });
+
+  const shirt = new THREE.MeshStandardMaterial({
+    color:0x3f4650,
+    roughness:1
+  });
+
+  const shirtDark = new THREE.MeshStandardMaterial({
+    color:0x252a31,
+    roughness:1
+  });
+
+  const pants = new THREE.MeshStandardMaterial({
+    color:0x20242a,
+    roughness:1
+  });
+
+  const blood = new THREE.MeshStandardMaterial({
+    color:0x7a1010,
+    roughness:0.9
+  });
+
+  const teeth = new THREE.MeshStandardMaterial({
+    color:0xd8d2ae,
+    roughness:0.8
+  });
+
+  const eyeWhite = new THREE.MeshBasicMaterial({
+    color:0xff3333
+  });
+
+  const pupil = new THREE.MeshBasicMaterial({
+    color:0x140000
+  });
+
+  // =========================
+  // TORSO
+  // =========================
+  const torso = new THREE.Mesh(
+    new THREE.BoxGeometry(1.25,1.65,0.72),
+    shirt
+  );
+  torso.position.y = 2.0;
+  z.add(torso);
+
+  // ROBEKAN BAJU
+  const tear1 = new THREE.Mesh(
+    new THREE.BoxGeometry(0.22,0.55,0.05),
+    shirtDark
+  );
+  tear1.position.set(-0.35,2.15,0.39);
+  z.add(tear1);
+
+  const tear2 = new THREE.Mesh(
+    new THREE.BoxGeometry(0.16,0.32,0.05),
+    shirtDark
+  );
+  tear2.position.set(0.25,1.75,0.39);
+  z.add(tear2);
+
+  // =========================
+  // LEHER
+  // =========================
+  const neck = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.28,0.32,0.3,8),
+    skinDark
+  );
+  neck.position.y = 2.95;
+  z.add(neck);
+
+  // =========================
+  // KEPALA
+  // =========================
+  const head = new THREE.Mesh(
+    new THREE.SphereGeometry(0.72,12,10),
+    skin
+  );
+  head.scale.set(0.9,1.05,0.9);
+  head.position.y = 3.65;
+  z.add(head);
+
+  // =========================
+  // RAHANG
+  // =========================
+  const jaw = new THREE.Mesh(
+    new THREE.BoxGeometry(0.78,0.28,0.7),
+    skin
+  );
+  jaw.position.set(0,3.25,0.3);
+  z.add(jaw);
+
+  // =========================
+  // TELINGA
+  // =========================
+  const earGeo = new THREE.SphereGeometry(0.18,8,8);
+
+  const earL = new THREE.Mesh(earGeo,skin);
+  earL.position.set(-0.67,3.65,0);
+  z.add(earL);
+
+  const earR = new THREE.Mesh(earGeo,skin);
+  earR.position.set(0.67,3.65,0);
+  z.add(earR);
+
+  // =========================
+  // MATA MERAH
+  // =========================
+  const eyeGeo = new THREE.SphereGeometry(0.12,10,10);
+
+  const eyeL = new THREE.Mesh(eyeGeo,eyeWhite);
+  eyeL.position.set(-0.27,3.78,0.63);
+  z.add(eyeL);
+
+  const eyeR = new THREE.Mesh(eyeGeo,eyeWhite);
+  eyeR.position.set(0.27,3.78,0.63);
+  z.add(eyeR);
+
+  // PUPIL
+  const pupilGeo = new THREE.SphereGeometry(0.045,8,8);
+
+  const pupilL = new THREE.Mesh(pupilGeo,pupil);
+  pupilL.position.set(-0.27,3.78,0.74);
+  z.add(pupilL);
+
+  const pupilR = new THREE.Mesh(pupilGeo,pupil);
+  pupilR.position.set(0.27,3.78,0.74);
+  z.add(pupilR);
+
+  // =========================
+  // HIDUNG
+  // =========================
+  const nose = new THREE.Mesh(
+    new THREE.BoxGeometry(0.18,0.22,0.22),
+    skinDark
+  );
+  nose.position.set(0,3.52,0.72);
+  z.add(nose);
+
+  // =========================
+  // MULUT
+  // =========================
+  const mouth = new THREE.Mesh(
+    new THREE.BoxGeometry(0.62,0.22,0.08),
+    blood
+  );
+  mouth.position.set(0,3.28,0.7);
+  z.add(mouth);
+
+  // GIGI
+  for(let i=-2;i<=2;i++){
+
+    const tooth = new THREE.Mesh(
+      new THREE.BoxGeometry(0.09,0.12,0.05),
+      teeth
+    );
+
+    tooth.position.set(
+      i*0.11,
+      3.34,
+      0.75
+    );
+
+    z.add(tooth);
+  }
+
+  // =========================
+  // LUKA WAJAH
+  // =========================
+  const wound1 = new THREE.Mesh(
+    new THREE.BoxGeometry(0.18,0.42,0.06),
+    blood
+  );
+  wound1.rotation.z = -0.35;
+  wound1.position.set(-0.42,3.48,0.66);
+  z.add(wound1);
+
+  const wound2 = new THREE.Mesh(
+    new THREE.BoxGeometry(0.12,0.25,0.06),
+    blood
+  );
+  wound2.rotation.z = 0.45;
+  wound2.position.set(0.45,3.95,0.58);
+  z.add(wound2);
+
+  // =========================
+  // LENGAN
+  // =========================
+  const armGeo = new THREE.CylinderGeometry(
+    0.22,
+    0.27,
+    1.5,
+    8
+  );
+
+  const armL = new THREE.Mesh(armGeo,skin);
+  armL.position.set(-0.92,2.0,0);
+  armL.rotation.z = -0.18;
+  z.add(armL);
+
+  const armR = new THREE.Mesh(armGeo,skin);
+  armR.position.set(0.92,2.0,0);
+  armR.rotation.z = 0.18;
+  z.add(armR);
+
+  // =========================
+  // TANGAN
+  // =========================
+  const handGeo = new THREE.SphereGeometry(0.28,10,8);
+
+  const handL = new THREE.Mesh(handGeo,skinDark);
+  handL.position.set(-1.05,1.22,0);
+  z.add(handL);
+
+  const handR = new THREE.Mesh(handGeo,skinDark);
+  handR.position.set(1.05,1.22,0);
+  z.add(handR);
+
+  // =========================
+  // KUKU / JARI
+  // =========================
+  for(let side of [-1,1]){
+
+    for(let i=0;i<3;i++){
+
+      const finger = new THREE.Mesh(
+        new THREE.BoxGeometry(0.08,0.24,0.08),
+        skin
+      );
+
+      finger.position.set(
+        side * (1.0 + (i-1)*0.12),
+        1.0,
+        0.12
+      );
+
+      finger.rotation.x = 0.25;
+      z.add(finger);
+    }
+  }
+
+  // =========================
+  // CELANA
+  // =========================
+  const legGeo = new THREE.CylinderGeometry(
+    0.24,
+    0.28,
+    1.5,
+    8
+  );
+
+  const legL = new THREE.Mesh(legGeo,pants);
+  legL.position.set(-0.34,0.42,0);
+  z.add(legL);
+
+  const legR = new THREE.Mesh(legGeo,pants);
+  legR.position.set(0.34,0.42,0);
+  z.add(legR);
+
+  // =========================
+  // SEPATU
+  // =========================
+  const shoeGeo = new THREE.BoxGeometry(
+    0.5,
+    0.28,
+    0.85
+  );
+
+  const shoeL = new THREE.Mesh(shoeGeo,shirtDark);
+  shoeL.position.set(-0.34,-0.48,0.18);
+  z.add(shoeL);
+
+  const shoeR = new THREE.Mesh(shoeGeo,shirtDark);
+  shoeR.position.set(0.34,-0.48,0.18);
+  z.add(shoeR);
+
+  // =========================
+  // LUKA DI TUBUH
+  // =========================
+  const bodyWound = new THREE.Mesh(
+    new THREE.BoxGeometry(0.3,0.4,0.06),
+    blood
+  );
+
+  bodyWound.rotation.z = 0.25;
+  bodyWound.position.set(0.35,2.25,0.39);
+  z.add(bodyWound);
+
+  // =========================
+  // POSISI SPAWN
+  // =========================
+  const angle = Math.random() * Math.PI * 2;
+  const distance = 12 + Math.random() * 8;
+
+  z.position.set(
+    Math.cos(angle) * distance,
+    0,
+    Math.sin(angle) * distance
+  );
+
+  // SPEED
+  z.userData.speed = 0.025 + Math.random() * 0.025;
+
+  scene.add(z);
+  zombies.push(z);
+}
+
+  const z = new THREE.Group();
+
   // MATERIAL
   const skinMat = new THREE.MeshStandardMaterial({
     color:0x6f8f45,
